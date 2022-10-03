@@ -13,7 +13,8 @@ import {ApiBaseResponse, SeasonFinalStanding, REQUEST_METHOD_TYPES} from '../typ
 
 //components
 import Pagetitle from './shared/Pagetitle';
-
+import RecordPerPageProps from './shared/RecordPerPage';
+import Pagination from './shared/Pagination';
 interface SeasonFinalStandingsProps{
 
 }
@@ -27,19 +28,35 @@ function SeasonFinalStandings(Props: SeasonFinalStandingsProps){
         total: 0
     });
     const [seasonsFindings, setSeasonFindings] = useState<SeasonFinalStanding[]>([]);
-
+    const [limit, setLimit] = useState<string>("30");
+    const [pageNo, setPageNo] = useState<number>(1);
 
     useEffect(() => {
-        APIRequest(`seasons/${season}/finalStandings`, REQUEST_METHOD_TYPES.GET, {})?.then((response) => {
+        APIRequest(`seasons/${season}/finalStandings`, REQUEST_METHOD_TYPES.POST, getFinalStandingsPageLoad())?.then((response) => {
             if(response.responseCode === 200){
                 //can be used a toast to show message popup //
-                setApiResponse(response.responseData);
+                setApiResponse({...response.responseData});
                 setSeasonFindings(response.responseData.seasonFinalStandingsList);
             }
         }).catch((error) => {
             console.log("ERROR",error);
         })
-    },[]);
+    },[limit, pageNo]);
+
+    const getFinalStandingsPageLoad = () => {
+        let formData = new FormData();
+        formData.append('limit', limit);
+        formData.append('pageNo', pageNo.toString());
+        return formData;
+    }
+
+    const handlePageNumberClick = (clickedPageNo: number) => {
+        setPageNo(clickedPageNo)
+    }
+
+    const handleRecordPerPageChange = (recordPerPage: string) => {
+        setLimit(recordPerPage)
+    }
 
     return (
         <div className="container">
@@ -53,6 +70,20 @@ function SeasonFinalStandings(Props: SeasonFinalStandingsProps){
                     <Button variant="link float-end"> 
                         <Link to="/home">Back</Link>
                     </Button>
+                </div>
+            </div>
+            <div className='row mb-3'>
+                <RecordPerPageProps 
+                    handleRecordPerPageChange = {handleRecordPerPageChange} 
+                    defaultSelectedLimit = {parseInt(limit)}
+                />
+                <div className='col-md-8'>
+                    <Pagination 
+                        limit={parseInt(limit)} 
+                        total = {apiResponse.total}
+                        handlePageNumberClick = {handlePageNumberClick}
+                        currentPageNo = {pageNo}
+                    />
                 </div>
             </div>
             <div className='row'>
@@ -84,6 +115,12 @@ function SeasonFinalStandings(Props: SeasonFinalStandingsProps){
                         </tbody>
                     </Table>
                 </Suspense>
+                <Pagination 
+                    limit={parseInt(limit)} 
+                    total = {apiResponse.total}
+                    handlePageNumberClick = {handlePageNumberClick}
+                    currentPageNo = {pageNo}
+                />
             </div>
         </div>
     );

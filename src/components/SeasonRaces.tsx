@@ -13,6 +13,8 @@ import {ApiBaseResponse,Races, REQUEST_METHOD_TYPES} from '../types';
 
 //components
 import Pagetitle from './shared/Pagetitle';
+import RecordPerPageProps from './shared/RecordPerPage';
+import Pagination from './shared/Pagination';
 
 interface SeasonRacesProps{
 
@@ -27,19 +29,35 @@ function SeasonRaces(pros: SeasonRacesProps){
         total: 0
     });
     const [races, setRaces] = useState<Races[]>([]);
+    const [limit, setLimit] = useState<string>("30");
+    const [pageNo, setPageNo] = useState<number>(1);
 
     useEffect(() => {
-        APIRequest(`seasons/${season}/races`, REQUEST_METHOD_TYPES.GET, {})?.then((response) => {
-            console.log("Seasons:",response);
+        APIRequest(`seasons/${season}/races`, REQUEST_METHOD_TYPES.POST, getSeasonRacePageLoad())?.then((response) => {
             if(response.responseCode === 200){
                 //can be used a toast to show message popup //
-                setApiResponse(response.responseData);
+                setApiResponse({...response.responseData});
                 setRaces(response.responseData.races);
             }
         }).catch((error) => {
             console.log("ERROR",error);
         })
-    },[]);
+    },[limit, pageNo]);
+
+    const getSeasonRacePageLoad = () => {
+        let formData = new FormData();
+        formData.append('limit', limit);
+        formData.append('pageNo', pageNo.toString());
+        return formData;
+    }
+
+    const handlePageNumberClick = (clickedPageNo: number) => {
+        setPageNo(clickedPageNo)
+    }
+
+    const handleRecordPerPageChange = (recordPerPage: string) => {
+        setLimit(recordPerPage)
+    }
 
     return (
         <div className="container">
@@ -55,8 +73,24 @@ function SeasonRaces(pros: SeasonRacesProps){
                     </Button>
                 </div>
             </div>
+                   
+            <div className='row mb-3'>
+                <RecordPerPageProps 
+                    handleRecordPerPageChange = {handleRecordPerPageChange} 
+                    defaultSelectedLimit = {parseInt(limit)}
+                />
+                <div className='col-md-8'>
+                    <Pagination 
+                        limit={parseInt(limit)} 
+                        total = {apiResponse.total}
+                        handlePageNumberClick = {handlePageNumberClick}
+                        currentPageNo = {pageNo}
+                    />
+                </div>
+            </div>
             <div className='row'>
                 <Suspense fallback = {<Spinner animation="grow"/>}>
+                    <div className='col-md-12'></div>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -103,6 +137,12 @@ function SeasonRaces(pros: SeasonRacesProps){
                     </Table>
                 </Suspense>
             </div>
+            <Pagination 
+                limit={parseInt(limit)} 
+                total = {apiResponse.total}
+                handlePageNumberClick = {handlePageNumberClick}
+                currentPageNo = {pageNo}
+            />
         </div>
     );
 }

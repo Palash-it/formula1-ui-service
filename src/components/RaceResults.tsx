@@ -14,6 +14,8 @@ import {ApiBaseResponse,RaceResult, REQUEST_METHOD_TYPES} from '../types';
 
 //components
 import Pagetitle from './shared/Pagetitle';
+import RecordPerPageProps from './shared/RecordPerPage';
+import Pagination from './shared/Pagination';
 
 
 interface RaceResultsProps{
@@ -32,18 +34,35 @@ function RaceResults(props:RaceResultsProps){
     });
     const [raceResults, setRaceResults] = useState<RaceResult[]>([]);
     const [message, setMessage] = useState<string>("");
+    const [limit, setLimit] = useState<string>("30");
+    const [pageNo, setPageNo] = useState<number>(1);
 
     useEffect(() => {
-        APIRequest(`seasons/${season}/${round}/results`, REQUEST_METHOD_TYPES.GET, {})?.then((response) => {
+        APIRequest(`seasons/${season}/${round}/results`, REQUEST_METHOD_TYPES.POST, getSeasonRaceResultPageLoad())?.then((response) => {
             if(response.responseCode === 200){
                 //can be used a toast to show message popup //
-                setApiResponse(response.responseData);
+                setApiResponse({...response.responseData});
                 setRaceResults(response.responseData.raceResults);
             }
         }).catch((error) => {
             console.log("ERROR",error);
         })
-    },[]);
+    },[limit, pageNo]);
+
+    const getSeasonRaceResultPageLoad = () => {
+        let formData = new FormData();
+        formData.append('limit', limit);
+        formData.append('pageNo', pageNo.toString());
+        return formData;
+    }
+
+    const handlePageNumberClick = (clickedPageNo: number) => {
+        setPageNo(clickedPageNo)
+    }
+
+    const handleRecordPerPageChange = (recordPerPage: string) => {
+        setLimit(recordPerPage)
+    }
 
     const applySelectedScoringSystem = () => {
         if(parseInt(pointsScoringSeason) > 0 && pointsScoringSeason !== season){
@@ -102,6 +121,20 @@ function RaceResults(props:RaceResultsProps){
                 </div>
             </div>
             <p>{message}</p>
+            <div className='row mb-3'>
+                <RecordPerPageProps 
+                    handleRecordPerPageChange = {handleRecordPerPageChange} 
+                    defaultSelectedLimit = {parseInt(limit)}
+                />
+                <div className='col-md-8'>
+                    <Pagination 
+                        limit={parseInt(limit)} 
+                        total = {apiResponse.total}
+                        handlePageNumberClick = {handlePageNumberClick}
+                        currentPageNo = {pageNo}
+                    />
+                </div>
+            </div>
             <div className='row mt-2'>
                 <Suspense fallback = {<Spinner animation="grow"/>}>
                     <Table striped bordered hover>
@@ -133,6 +166,12 @@ function RaceResults(props:RaceResultsProps){
                         </tbody>
                     </Table>
                 </Suspense>
+                <Pagination 
+                    limit={parseInt(limit)} 
+                    total = {apiResponse.total}
+                    handlePageNumberClick = {handlePageNumberClick}
+                    currentPageNo = {pageNo}
+                />
             </div>
         </div>
     );

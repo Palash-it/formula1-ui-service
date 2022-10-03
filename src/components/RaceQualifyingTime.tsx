@@ -30,10 +30,10 @@ function RaceQualifyingTime(props: RaceQualifyingTimeProps){
     const [raceQualifyTime, setRaceQualifyTime] = useState<RaceQualifyTime[]>([]);
 
     useEffect(() => {
-        APIRequest(`seasons/${season}/${round}/qualifying`, REQUEST_METHOD_TYPES.GET, {})?.then((response) => {
+        APIRequest(`seasons/${season}/${round}/qualifying`, REQUEST_METHOD_TYPES.POST, {})?.then((response) => {
             if(response.responseCode === 200){
                 //can be used a toast to show message popup //
-                setApiResponse(response.responseData);
+                setApiResponse({...response.responseData});
                 setRaceQualifyTime(response.responseData.raceQualifyingTime);
             }
         }).catch((error) => {

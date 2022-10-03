@@ -31,7 +31,7 @@ function Home(props: HomeProps){
         APIRequest("seasons", REQUEST_METHOD_TYPES.GET, {})?.then((response) => {
             if(response.responseCode === 200){
                 //can be used a toast to show message popup //
-                setApiResponse(response.responseData);
+                setApiResponse({...response.responseData});
                 setSeasons(response.responseData.seasons);
             }
         }).catch((error) => {
