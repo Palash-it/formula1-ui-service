@@ -31,7 +31,7 @@ function Login({updateTokenHandler, isAuthenticated}: LoginProps){
         e.preventDefault()
         let isValid = isValidate();
         if(isValid){
-            APIRequest(JWT_TOKEN, REQUEST_METHOD_TYPES.POST, getPayload())?.then((response) => {
+            APIRequest("auth/token", REQUEST_METHOD_TYPES.POST, getPayload())?.then((response) => {
                 if(response.token){
                     setLogMessage({
                         message : "Login Success",

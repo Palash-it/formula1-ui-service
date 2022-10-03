@@ -6,7 +6,7 @@ import "./App.css";
 import {JWT_TOKEN} from './components/utils/constants';
 
 //React components
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,6 +22,11 @@ import PublicRoute from './components/routes/PublicRoute';
 import PriveRoute from './components/routes/PrivateRoute';
 
 import Home from './components/Home';
+import SeasonFinalFindings from './components/SeasonFinalFindings';
+import SeasonRaces from './components/SeasonRaces';
+import RaceQualifyingTime from './components/RaceQualifyingTime';
+import RaceResults from './components/RaceResults';
+import AuthVerify from './components/auth/AuthVerify';
 
 // helpers,libs
 import {getToken, hasValidToken, signOut} from './components/helpers/authhelper';
@@ -52,10 +57,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem(JWT_TOKEN, token);
     if(!isAuthenticated){
-      
+      updateTokenHandler("", false);
     }
   },[token, isAuthenticated]);
   return (
+    <>
     <Router>
       <Header isAuthenticated = {isAuthenticated} handleSignOut = {handleSignOut}/>
         <Suspense fallback = {<Spinner animation="grow"/>}>
@@ -84,10 +90,48 @@ function App() {
                   </PriveRoute>
                 } 
               />
+              <Route
+                path="/season/:season/finalStandings"
+                element = {
+                  <PriveRoute isAuthenticated={isAuthenticated}>
+                    <SeasonFinalFindings/>
+                  </PriveRoute>
+                } 
+              />
+              <Route
+                path="/season/:season/races"
+                element = {
+                  <PriveRoute isAuthenticated={isAuthenticated}>
+                    <SeasonRaces/>
+                  </PriveRoute>
+                } 
+              />
+
+              <Route
+                path="/season/:season/:round/qualifying"
+                element = {
+                  <PriveRoute isAuthenticated={isAuthenticated}>
+                    <RaceQualifyingTime/>
+                  </PriveRoute>
+                } 
+              />
+
+              <Route
+                path="/season/:season/:round/results"
+                element = {
+                  <PriveRoute isAuthenticated={isAuthenticated}>
+                    <RaceResults/>
+                  </PriveRoute>
+                } 
+              />
+
+
           </Routes>
         </Suspense>
       <Footer />
     </Router>
+    <AuthVerify signOut={handleSignOut}/>
+    </>
   );
 }
 
