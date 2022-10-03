@@ -26,7 +26,7 @@ import SeasonFinalFindings from './components/SeasonFinalFindings';
 import SeasonRaces from './components/SeasonRaces';
 import RaceQualifyingTime from './components/RaceQualifyingTime';
 import RaceResults from './components/RaceResults';
-import AuthVerify from './components/auth/AuthVerify';
+import SupportedScoringSystem from './components/SupportedScoringSystem';
 
 // helpers,libs
 import {getToken, hasValidToken, signOut} from './components/helpers/authhelper';
@@ -56,9 +56,6 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem(JWT_TOKEN, token);
-    if(!isAuthenticated){
-      updateTokenHandler("", false);
-    }
   },[token, isAuthenticated]);
   return (
     <>
@@ -80,6 +77,12 @@ function App() {
                   <PublicRoute isAuthenticated={isAuthenticated}>
                     <Login updateTokenHandler = {updateTokenHandler} isAuthenticated = {isAuthenticated}/>
                   </PublicRoute>
+                } 
+              />
+              <Route
+                path="/supported-scoring-systems"
+                element = {
+                  <SupportedScoringSystem/>
                 } 
               />
               <Route
@@ -124,13 +127,11 @@ function App() {
                   </PriveRoute>
                 } 
               />
-
-
           </Routes>
         </Suspense>
       <Footer />
     </Router>
-    <AuthVerify signOut={handleSignOut}/>
+    
     </>
   );
 }

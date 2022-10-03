@@ -34,5 +34,19 @@ export const APIRequest = function (uriPath: string, methodType: REQUEST_METHOD_
         }).catch((error) => {
             console.error("ERROR: ", error);
         });
-      }
+    } else if (methodType === REQUEST_METHOD_TYPES.POST) {
+      return fetch(process.env.REACT_APP_API_URL + uriPath, {
+        method: REQUEST_METHOD_TYPES.POST,
+        mode: "cors",
+        headers: {
+          Authorization: AUTH_HEADER_KEY + localStorage.getItem(JWT_TOKEN),
+          Accept: "application/json",
+        },
+        body: payload,
+      }).then((response) => {
+          return response.json();
+      }).catch((error) => {
+          console.error("ERROR: ", error);
+      });
+  }
 }

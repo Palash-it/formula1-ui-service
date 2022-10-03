@@ -50,7 +50,7 @@ function Home(props: HomeProps){
                     {
                         seasons.map((season, index) => {
                             return (
-                                <Card style={{ width: '18rem',marginRight: '1rem' }} key={'card-'+index}>
+                                <Card className='mr-2 mb-3' style={{ width: '18rem' }} key={'card-'+index}>
                                     <Card.Body>
                                         <Card.Title className='text-center'>{season.season}</Card.Title>
                                         <Card.Text className='text-center'>
