@@ -22,7 +22,7 @@ import PublicRoute from './components/routes/PublicRoute';
 import PriveRoute from './components/routes/PrivateRoute';
 
 import Home from './components/Home';
-import SeasonFinalFindings from './components/SeasonFinalFindings';
+import SeasonFinalStandings from './components/SeasonFinalStandings';
 import SeasonRaces from './components/SeasonRaces';
 import RaceQualifyingTime from './components/RaceQualifyingTime';
 import RaceResults from './components/RaceResults';
@@ -97,7 +97,7 @@ function App() {
                 path="/season/:season/finalStandings"
                 element = {
                   <PriveRoute isAuthenticated={isAuthenticated}>
-                    <SeasonFinalFindings/>
+                    <SeasonFinalStandings/>
                   </PriveRoute>
                 } 
               />

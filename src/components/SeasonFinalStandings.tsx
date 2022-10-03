@@ -9,7 +9,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import {APIRequest} from './helpers/apirequesthelper';
 
 //types
-import {ApiBaseResponse, SeasonFinalStandings, REQUEST_METHOD_TYPES} from '../types';
+import {ApiBaseResponse, SeasonFinalStanding, REQUEST_METHOD_TYPES} from '../types';
 
 //components
 import Pagetitle from './shared/Pagetitle';
@@ -17,7 +17,7 @@ import Pagetitle from './shared/Pagetitle';
 interface SeasonFinalStandingsProps{
 
 }
-function SeasonFinalFindings(Props: SeasonFinalStandingsProps){
+function SeasonFinalStandings(Props: SeasonFinalStandingsProps){
     let { season } = useParams();
     const [apiResponse, setApiResponse] = useState<ApiBaseResponse>({
         series : "",
@@ -26,7 +26,7 @@ function SeasonFinalFindings(Props: SeasonFinalStandingsProps){
         offset: 0,
         total: 0
     });
-    const [seasonsFindings, setSeasonFindings] = useState<SeasonFinalStandings[]>([]);
+    const [seasonsFindings, setSeasonFindings] = useState<SeasonFinalStanding[]>([]);
 
 
     useEffect(() => {
@@ -89,4 +89,4 @@ function SeasonFinalFindings(Props: SeasonFinalStandingsProps){
     );
 }
 
-export default SeasonFinalFindings;
+export default SeasonFinalStandings;

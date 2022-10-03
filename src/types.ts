@@ -20,7 +20,7 @@ export interface Season {
     url: string;
 }
 
-export interface SeasonFinalStandings{
+export interface SeasonFinalStanding{
     position: number;
     driverGivenName: string;
     driverFamilyName: string;

@@ -37,6 +37,7 @@ function Login({updateTokenHandler, isAuthenticated}: LoginProps){
                         message : "Login Success",
                         type: "success"
                     });
+                    localStorage.setItem(JWT_TOKEN, response.token);
                     sessionStorage.setItem(JWT_TOKEN, response.token);
                     updateTokenHandler(response.token, true);
                     navigate("/home");
