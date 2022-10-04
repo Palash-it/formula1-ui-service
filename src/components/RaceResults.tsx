@@ -24,7 +24,7 @@ interface RaceResultsProps{
 function RaceResults(props:RaceResultsProps){
     const { season, round } = useParams();
     const [pointsScoringSeason, setPointsScoringSeason] = useState<string>("");
-    const seasonsFromBegining = getArrayOfYears(1950, new Date().getFullYear(), 1);
+    const seasonsFromBegining = getArrayOfYears(1950, new Date().getFullYear(), 1).reverse();
     const [apiResponse, setApiResponse] = useState<ApiBaseResponse>({
         series : "",
         url: "",
@@ -106,7 +106,7 @@ function RaceResults(props:RaceResultsProps){
                             </option>
                         ))}
                     </select>
-                    <small className='text-info'>We dont support all available scoring year. Please <Link target={"_blank"} to="/supported-scoring-systems">click here</Link> to see which years we support</small>
+                    <small className='text-info'>We dont support all available scoring year from avobe list. Please <Link target={"_blank"} to="/supported-scoring-systems">click here</Link> to see which years we support</small>
                 </div>
                 <div className='col-md-2'>
                     <Button variant="primary" onClick={applySelectedScoringSystem}>Apply Scoring</Button>
